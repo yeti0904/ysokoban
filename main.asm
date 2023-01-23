@@ -292,6 +292,9 @@ gameLoop:
 	ret
 
 .placeCrateUp:
+	cmp word [playerPosY], 0
+	je .dontPlaceCrateUp
+
 	call .removeCrate
 	
 	mov cx, [playerPosX]
@@ -302,7 +305,14 @@ gameLoop:
 	call setLevelTile
 	jmp gameLoop
 
+.dontPlaceCrateUp:
+	inc word [playerPosY]
+	jmp gameLoop
+
 .placeCrateDown:
+	cmp word [playerPosY], LEVELHEIGHT
+	je .dontPlaceCrateDown
+
 	call .removeCrate
 	
 	mov cx, [playerPosX]
@@ -313,7 +323,14 @@ gameLoop:
 	call setLevelTile
 	jmp gameLoop
 
+.dontPlaceCrateDown:
+	dec word [playerPosY]
+	jmp gameLoop
+
 .placeCrateRight:
+	cmp word [playerPosX], LEVELWIDTH - 1
+	je .dontPlaceCrateRight
+
 	call .removeCrate
 	
 	mov cx, [playerPosX]
@@ -324,7 +341,14 @@ gameLoop:
 	call setLevelTile
 	jmp gameLoop
 
-.placeCrateLeft:
+.dontPlaceCrateRight:
+	dec word [playerPosX]
+	jmp gameLoop
+
+.placeCrateLeft:	
+	cmp word [playerPosX], 0
+	je .dontPlaceCrateLeft
+
 	call .removeCrate
 	
 	mov cx, [playerPosX]
@@ -333,6 +357,10 @@ gameLoop:
 	mov si, level1
 	mov al, CRATETILE
 	call setLevelTile
+	jmp gameLoop
+
+.dontPlaceCrateLeft:
+	inc word [playerPosX]
 	jmp gameLoop
 
 gameEnd:
